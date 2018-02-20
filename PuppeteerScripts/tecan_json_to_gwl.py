@@ -15,7 +15,7 @@ MAX_DESTPLATE_ROW   = 7    # rows A(1) to G(7) in destination well plate
 
 def get_tecan_instructions(response_json):
 
-    tecan_directions = response_json['tecanProgram']
+    tecan_directions = repr(response_json['tecanProgram'])
 
     # Make dict of part name : hard-coded well numbers (per collaborator's request)
     hard_coded_wellnums = get_source_well_numbers()
@@ -29,19 +29,16 @@ def get_tecan_instructions(response_json):
 
     instruction_array = []
     for x in range(0, len(aspirate)):
-        instruction_array.push(aspirate[x])
-        instruction_array.push(dispense[x])
-        instruction_array.push('W;')
+        instruction_array.append(aspirate[x])
+        instruction_array.append(dispense[x])
+        instruction_array.append('W;')
 
-    # Print output txt file with source well number assignments
-    print_source_part_assignments(wells_to_parts, source_wells, aspirate, dispense, hard_coded_wellnums)
-
-    return {"tecan_instructions":instruction_array,
+    return json.dumps({"tecan_instructions":instruction_array,
             "sorted_wells_to_parts":sorted(hard_coded_wellnums.items(), key=lambda x: x[1]),
             "source_wells":source_wells,
             "aspirate":aspirate,
             "dispense":dispense,
-            "hard_coded_wellnums":hard_coded_wellnums}
+            "wells_to_parts": wells_to_parts})
 
 
 def process_puppeteer_instructions(puppeteer_output, rc_to_wn):

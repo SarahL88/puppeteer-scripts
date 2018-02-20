@@ -71,13 +71,13 @@ def make_project(repo, instanceid, authorid, date):
 
 def unzip_file(archive):
     with zipfile.ZipFile(archive, 'r') as archive:
-        archive.extractall('HeadtoHead2.zip' + '-contents')
+        archive.extractall('/var/www/PuppeteerScripts/PuppeteerScripts/HeadtoHead2.zip' + '-contents')
 
 
 def get_subdirectories(archive):
-    os.chdir(archive + '-contents/' + archive.strip('.zip'))
+    os.chdir(archive + '-contents/HeadtoHead2')
     subdirectoriesfolder = os.getcwd()
-    subdirectories = os.listdir()
+    subdirectories = os.listdir(subdirectoriesfolder)
     if '.DS_Store' in subdirectories:
         subdirectories.remove('.DS_Store')
     return subdirectoriesfolder, subdirectories
@@ -90,7 +90,7 @@ def get_filenames(subdirectories, homefolder):
 
     for subdir in subdirectories:
         os.chdir(subdir)
-        files = os.listdir()
+        files = os.listdir(os.getcwd())
         overhangfiles.append([subdir + '/' + f for f in files if OVERHANGSFILENAME in f][0])
         vectorfiles.append([subdir + '/' + f for f in files if VECTORSFILENAME in f][0])
         plasmidfiles.append([subdir + '/' + f for f in files if PLASMIDSFILENAME in f][0])

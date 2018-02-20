@@ -4,7 +4,7 @@ import sys
 import uuid
 import requests
 import json
-from flask import request, Flask
+from flask import Flask, request
 app = Flask(__name__)
 
 import modularcloning
@@ -15,20 +15,20 @@ import tecan_json_to_gwl
 import tecan_to_autoprotocol
 
 PUPPETEER_URL = 'http://128.31.25.45:8080/penguin-services-0.1.0/build'
-CONSTELLATION_URL = 'http://localhost:8082/postSpecs'
+CONSTELLATION_URL = 'http://34.227.115.255/postSpecs'
 CONCENTRATION_NG_UL = 25.0
 CONCENTRATION_UNIT = 'NANOGRAMS_PER_MICROLITER'
 VOLUME_UNIT = 'MICROLITERS'
+ZIPFILE = '/var/www/PuppeteerScripts/PuppeteerScripts/HeadtoHead2.zip'
 
-
-@app.route("/get-tecan-instructions", methods=['POST'])
+@app.route("/get-tecan-instructions", methods=['GET'])
 def get_tecan_instructions():
     authorid = str(uuid.uuid4())
     instanceid = str(uuid.uuid4())
     date = datetime.date.today()
 
     # Parse input files, populate 'repo' dict
-    repo = modularcloning.make_repo(request.files, instanceid, authorid, date);
+    repo = modularcloning.make_repo(ZIPFILE, instanceid, authorid, date);
 
     # Get Constellation results, add to 'repo' dict
     specificationview.set_specification(repo, CONSTELLATION_URL, authorid, date);
@@ -39,7 +39,7 @@ def get_tecan_instructions():
     headers = {'Content-Type': 'application/json'}
     puppeteer_output_json = requests.post(PUPPETEER_URL, data=puppeteer_input_json, headers=headers)
 
-    return tecan_json_to_gwl.get_tecan_instructions(puppeteer_output_json)
+    return tecan_json_to_gwl.get_tecan_instructions(json.loads(puppeteer_output_json.text))
 
 
 @app.route("/generate-autoprotocol", methods=['POST'])
