@@ -1,7 +1,7 @@
 # Scripts for "PuppeteerLite" and "SD2 Puppeteer"
 The scripts in this repository combine the SD2 demo workflow with the Living Computing Project workflow (aka PuppeteerLite) so that it works on the same UI     
 
-Code for the UI is located at https://github.com/hicsail/SD2_demo_austin
+Code for the UI is located at https://github.com/hicsail/puppeteer-frontend
 
 ## Flask Application
 These scripts have been deployed on http://128.31.25.45:80 as a Flask RESTful service     
